@@ -9,11 +9,17 @@ import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  showLoginError,
+  signOut,
   onAuthStateChanged,
 } from "firebase/auth";
 
 import { getFirestore, getDoc, doc, setDoc } from "firebase/firestore";
+import {
+  setCookie,
+  removeCookie,
+  removeLocalStorage,
+  setLocalStorage,
+} from "../helpers/auth";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -42,20 +48,19 @@ provider.setCustomParameters({
 
 export const auth = getAuth();
 
-
-
-
 // functions for authentication
 
-export const signInWithGooglePopUp = () =>
+//login function
 
-  signInWithPopup(auth, provider);
+export const signInWithGooglePopUp = () => signInWithPopup(auth, provider);
 
 export const signInWithGoogleRedirect = () =>
-
   signInWithRedirect(auth, provider);
 
 export const loginWithEmailandPassword = async (email, password) => {
+
+  if (!email || !password) return;
+
   try {
     const userCredential = await signInWithEmailAndPassword(
       auth,
@@ -68,14 +73,22 @@ export const loginWithEmailandPassword = async (email, password) => {
     return userCredential;
   } catch (error) {
     console.log(error);
-    showLoginError(error);
+
+    if (error.code === "auth/wrong-password") {
+      alert("Wrong password");
+    }
+
+    if (error.code === "auth/user-not-found") {
+      alert("User not found");
+    }
   }
 };
 
+//sign Up functions
 
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
 
-
-export const createUser = async (email, password) => {
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -88,7 +101,6 @@ export const createUser = async (email, password) => {
     return userCredential;
   } catch (error) {
     console.log(error);
-    showLoginError(error);
   }
 };
 
@@ -96,11 +108,21 @@ export const createUser = async (email, password) => {
 
 
 export const userAuthState = async () => {
+
   onAuthStateChanged(auth, (user) => {
+
     if (user) {
       console.log(user);
 
-      return user;
+      user.getIdToken().then((token) => {
+        console.log(token);
+
+        setCookie("token", token);
+        setLocalStorage("user", token);
+
+        return token;
+      });
+      
     } else {
       console.log("No user");
       return null;
@@ -108,32 +130,29 @@ export const userAuthState = async () => {
   });
 };
 
+
+
+// sign out functions
+
 export const logOut = async () => {
   try {
-    await auth.signOut(auth);
-    console.log("Logged out");
+    const response = await signOut(auth);
+
+    removeCookie("token");
+    removeLocalStorage("user");
+
+    console.log("Logged out!");
   } catch (error) {
+    alert("Error logging out");
     console.log(error);
   }
 };
 
-//functions login with google
-
-
-
-
-
-
-
-
 //firestore databse
-
-
 
 export const db = getFirestore();
 
 export const createUserDocument = async (userAuth, additionalData) => {
-
   if (!userAuth) return;
 
   const userRef = doc(db, "users", userAuth.uid);
@@ -154,10 +173,13 @@ export const createUserDocument = async (userAuth, additionalData) => {
         ...additionalData,
       });
     } catch (error) {
+      if (error.code === "auth/email-already-in-use") {
+        alert("email already in use");
+      }
+
       console.log("error creating user", error.message);
     }
   }
 
   return userRef;
-
-}
+};

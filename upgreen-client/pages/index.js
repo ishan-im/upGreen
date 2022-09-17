@@ -1,59 +1,139 @@
-import Head from 'next/head'
+import Head from "next/head";
 
-import styles from '../styles/Home.module.css'
+import styles from "../styles/Home.module.css";
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
-import { signInWithGooglePopUp, loginWithEmailandPassword, createUserDocument } from '../auth/firebase/firebase'
+import dynamic from 'next/dynamic'
+
+const DynamicHeader = dynamic(() => Home, {
+  ssr: false,
+})
+
+import {
+  signInWithGooglePopUp,
+  loginWithEmailandPassword,
+  createUserDocument,
+  createAuthUserWithEmailAndPassword,
+  logOut,
+  userAuthState
+} from "../auth/firebase/firebase";
+import { isAuth} from "../auth/helpers/auth";
 
 export default function Home() {
-
-  const [auth, setAuth] = useState(false)
+  const [auth, setAuth] = useState(false);
 
   const [state, setState] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-    name: '',
-    email: '',
-    password: '',
+  const { name, email, password, confirmPassword } = state;
 
-  })
-
- 
-
-  const {name, email, password} = state
-
-  const logInHandler = async (e) =>{
-
+  const logInHandler = async (e) => {
     e.preventDefault();
-    
-    const {user} = await signInWithGooglePopUp()
 
-    console.log("from login function: ",user);
+    const { user } = await signInWithGooglePopUp();
 
-    const userRef = await createUserDocument(user)
+    console.log("from login function: ", user);
+
+    const userRef = await createUserDocument(user);
+
     console.log(userRef);
 
-    setAuth(true)
+    setAuth(true);
+  };
+
+  const authSubmitHandler = async (e) => {
+    e.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert("passwords don't match");
+      return;
+    }
+
+    try {
+      const { user } = await createAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
+
+      console.log(user);
+
+      const displayName = name;
+
+      const userRef = await createUserDocument(user, { displayName });
+      console.log(userRef);
+
+      setAuth(true);
+    } catch (error) {
+      console.log("user creatinon error", error);
+    }
+  };
+
+
+  const authSignHandler = async (e) => {
+    e.preventDefault();
+
+    try {
+
+      const { user } = await loginWithEmailandPassword(email, password);
+
+      console.log(user);
+
+      setAuth(true);
+
+    }catch(error){
+        
+        console.log(error);
+        
+    }
 
   }
 
+  const inputChangeHandler = (name) => (e) => {
+    setState({ ...state, [name]: e.target.value });
+    console.log(e.target.value);
+  };
 
-  const emailSubmitHandler = (e) =>{
+
+  const logOutHandler = async (e) => {
 
     e.preventDefault();
-    loginWithEmailandPassword(email, password)
-    console.log("Email submit");
+
+    try{
+        
+      const response =   await logOut();
+  
+        setAuth(false);
+  
+    } catch(error){
+  
+        console.log(error);
+  
+    }
+
+  }
+
+
+  useEffect(() => {
+
+
+    const token = userAuthState();
+
     
-  }
+    if (token) { 
+      isAuth()
+    }
+  
+    
+
+  }, []);
 
 
-  const inputChangeHandler = (name) => (e) =>{
-
-    setState({...state, [name]: e.target.value})
-    console.log(e.target.value);
-
-  }
-
+ 
 
   return (
     <div className={styles.container}>
@@ -64,31 +144,77 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
+        {isAuth() && <button onClick={logOutHandler}>Log Out</button>}
 
-
-        {auth && <button>Log Out</button>}
-
-
-        {!auth && (
-
+        {!isAuth() && (
           <>
+            <button onClick={logInHandler}>Log In with Google</button>
 
-        <button onClick={logInHandler}>Log In with Google</button>
+            <form onSubmit={authSignHandler}>
+              <label>Sign In</label>
 
-        <form onSubmit={emailSubmitHandler}>
+              
 
-          <input type="email" placeholder="Email"  value={email} onChange={inputChangeHandler("email")}/>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={inputChangeHandler("email")}
+                required
+              />
 
-          <input type="password" placeholder="Password" value={password} onChange={inputChangeHandler("password")}/>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={inputChangeHandler("password")}
+                required
+              />
 
-          <button type="submit">Log In</button>
+              
+              <button type="submit">Log In</button>
+            </form>
 
-        </form>
-        </>
-        )
-  }
+            <form onSubmit={authSubmitHandler}>
+              <label>Sign Up</label>
 
+              <input
+                type="text"
+                placeholder="Name"
+                onChange={inputChangeHandler("name")}
+                value={name}
+                required
+              />
+
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={inputChangeHandler("email")}
+                required
+              />
+
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={inputChangeHandler("password")}
+                required
+              />
+
+              <input
+                type="password"
+                placeholder="Password"
+                value={confirmPassword}
+                onChange={inputChangeHandler("confirmPassword")}
+                required
+              />
+
+              <button type="submit">sign Up</button>
+            </form>
+          </>
+        )}
       </main>
     </div>
-  )
+  );
 }
