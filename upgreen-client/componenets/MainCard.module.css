@@ -1,0 +1,18 @@
+.mainCard {
+    /* color: red;
+    border: 2px solid rebeccapurple;
+    width: 30%; */
+    box-sizing: border-box;
+
+    position: absolute;
+    width: 307px;
+    height: 351px;
+    left: 1199px;
+    top: 451px;
+
+    background: linear-gradient(114.17deg, rgba(238, 206, 125, 0.78) -95.06%, rgba(255, 214, 0, 0.22) -51.79%, rgba(55, 193, 6, 0.17) 98.15%);
+    backdrop-filter: blur(21px);
+    /* Note: backdrop-filter has minimal browser support */
+
+    border-radius: 44px;
+}

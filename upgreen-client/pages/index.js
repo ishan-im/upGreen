@@ -6,6 +6,18 @@ import { useEffect, useState } from "react";
 
 import dynamic from 'next/dynamic'
 
+import Navbar from '../componenets/Navbar'
+
+import Bodypicture from '../componenets/Bodypicture'
+
+import Button from "../componenets/Button";
+
+import MainCard from "../componenets/MainCard";
+
+import Mission from "../componenets/mission/Mission"
+
+import Products from "../componenets/products/Products"
+
 const DynamicHeader = dynamic(() => Home, {
   ssr: false,
 })
@@ -18,7 +30,7 @@ import {
   logOut,
   userAuthState
 } from "../auth/firebase/firebase";
-import { isAuth} from "../auth/helpers/auth";
+import { isAuth } from "../auth/helpers/auth";
 
 export default function Home() {
   const [auth, setAuth] = useState(false);
@@ -85,10 +97,10 @@ export default function Home() {
 
       setAuth(true);
 
-    }catch(error){
-        
-        console.log(error);
-        
+    } catch (error) {
+
+      console.log(error);
+
     }
 
   }
@@ -103,16 +115,16 @@ export default function Home() {
 
     e.preventDefault();
 
-    try{
-        
-      const response =   await logOut();
-  
-        setAuth(false);
-  
-    } catch(error){
-  
-        console.log(error);
-  
+    try {
+
+      const response = await logOut();
+
+      setAuth(false);
+
+    } catch (error) {
+
+      console.log(error);
+
     }
 
   }
@@ -123,17 +135,17 @@ export default function Home() {
 
     const token = userAuthState();
 
-    
-    if (token) { 
+
+    if (token) {
       isAuth()
     }
-  
-    
+
+
 
   }, []);
 
 
- 
+
 
   return (
     <div className={styles.container}>
@@ -143,7 +155,14 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
+      <Navbar />
+      <Bodypicture />
+      <Button />
+      <MainCard />
+      <Mission />
+      <Products />
+
+      {/* <main className={styles.main}>
         {isAuth() && <button onClick={logOutHandler}>Log Out</button>}
 
         {!isAuth() && (
@@ -153,7 +172,7 @@ export default function Home() {
             <form onSubmit={authSignHandler}>
               <label>Sign In</label>
 
-              
+
 
               <input
                 type="email"
@@ -171,7 +190,7 @@ export default function Home() {
                 required
               />
 
-              
+
               <button type="submit">Log In</button>
             </form>
 
@@ -211,10 +230,11 @@ export default function Home() {
               />
 
               <button type="submit">sign Up</button>
-            </form>
+            </form> 
+
           </>
         )}
-      </main>
+          </main> */}
     </div>
   );
 }
