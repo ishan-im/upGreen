@@ -1,0 +1,11 @@
+.button {
+    position: absolute;
+    width: 316px;
+    height: 84px;
+    left: 638px;
+    top: 624px;
+    color: black;
+    background: #E9FF62;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 21px;
+}

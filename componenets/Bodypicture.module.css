@@ -1,0 +1,12 @@
+.pictureStyle {
+
+    position: absolute;
+    width: 1765px;
+    height: 865px;
+    left: -387px;
+    top: 167px;
+
+    /* background: url(image.png); */
+    /* filter: blur(1px); */
+}
+
