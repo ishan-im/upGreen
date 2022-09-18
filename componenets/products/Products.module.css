@@ -1,0 +1,21 @@
+.heading {
+    text-align: center;
+}
+
+
+.cardWrapper {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+
+}
+
+.cardStyle {
+    /* position: absolute; */
+    width: 404px;
+    height: 557px;
+    background: radial-gradient(97.57% 210.75% at 0.9% 2.98%, rgba(255, 255, 255, 0.15) 0%, rgba(158, 209, 140, 0.78) 100%);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 4px 4px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(21px);
+    border-radius: 43px;
+}
