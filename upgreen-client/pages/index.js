@@ -4,11 +4,33 @@ import styles from "../styles/Home.module.css";
 
 import { useEffect, useState } from "react";
 
-import dynamic from 'next/dynamic'
+import dynamic from "next/dynamic";
+
+import Navbar from "../componenets/Navbar";
+
+import Donate from "../componenets/brand/donate";
+
+import Bodypicture from "../componenets/Bodypicture";
+
+import Button from "../componenets/Button";
+
+import MainCard from "../componenets/MainCard";
+
+import Mission from "../componenets/mission/Mission";
+
+import Products from "../componenets/products/Products";
+
+import Work from "../componenets/work/Work";
+
+import Footer from "../componenets/footer/Footer";
+
+import CaseStudy from "../componenets/case-study/CaseStudy";
+
+import { ref } from "firebase/storage";
 
 const DynamicHeader = dynamic(() => Home, {
   ssr: false,
-})
+});
 
 import {
   signInWithGooglePopUp,
@@ -16,9 +38,10 @@ import {
   createUserDocument,
   createAuthUserWithEmailAndPassword,
   logOut,
-  userAuthState
+  userAuthState,
+  storage
 } from "../auth/firebase/firebase";
-import { isAuth} from "../auth/helpers/auth";
+import { isAuth } from "../auth/helpers/auth";
 
 export default function Home() {
   const [auth, setAuth] = useState(false);
@@ -73,67 +96,65 @@ export default function Home() {
     }
   };
 
-
   const authSignHandler = async (e) => {
     e.preventDefault();
 
     try {
-
       const { user } = await loginWithEmailandPassword(email, password);
 
       console.log(user);
 
       setAuth(true);
-
-    }catch(error){
-        
-        console.log(error);
-        
+    } catch (error) {
+      console.log(error);
     }
-
-  }
+  };
 
   const inputChangeHandler = (name) => (e) => {
     setState({ ...state, [name]: e.target.value });
     console.log(e.target.value);
   };
 
-
   const logOutHandler = async (e) => {
-
     e.preventDefault();
 
-    try{
-        
-      const response =   await logOut();
-  
-        setAuth(false);
-  
-    } catch(error){
-  
-        console.log(error);
-  
+    try {
+      const response = await logOut();
+
+      setAuth(false);
+    } catch (error) {
+      console.log(error);
     }
+  };
 
-  }
+  const [imageList, setImageList] = useState([]);
 
+  const imageListRef = ref(storage, "images/");
+
+  const imageListHandler = async () => {
+    try {
+      const response = await listAll(imageListRef);
+
+      response.items.forEach((itemRef) => {
+        // All the items under listRef.
+        console.log(itemRef);
+      });
+
+      setImageList(response.items);
+
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-
-
     const token = userAuthState();
 
-    
-    if (token) { 
-      isAuth()
+    if (token) {
+      isAuth();
     }
-  
-    
-
   }, []);
-
-
- 
 
   return (
     <div className={styles.container}>
@@ -143,78 +164,17 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        {isAuth() && <button onClick={logOutHandler}>Log Out</button>}
-
-        {!isAuth() && (
-          <>
-            <button onClick={logInHandler}>Log In with Google</button>
-
-            <form onSubmit={authSignHandler}>
-              <label>Sign In</label>
-
-              
-
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={inputChangeHandler("email")}
-                required
-              />
-
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={inputChangeHandler("password")}
-                required
-              />
-
-              
-              <button type="submit">Log In</button>
-            </form>
-
-            <form onSubmit={authSubmitHandler}>
-              <label>Sign Up</label>
-
-              <input
-                type="text"
-                placeholder="Name"
-                onChange={inputChangeHandler("name")}
-                value={name}
-                required
-              />
-
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={inputChangeHandler("email")}
-                required
-              />
-
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={inputChangeHandler("password")}
-                required
-              />
-
-              <input
-                type="password"
-                placeholder="Password"
-                value={confirmPassword}
-                onChange={inputChangeHandler("confirmPassword")}
-                required
-              />
-
-              <button type="submit">sign Up</button>
-            </form>
-          </>
-        )}
-      </main>
+      {/* <Navbar /> */}
+      <Bodypicture />
+      <Button />
+      <MainCard />
+      <Mission />
+      <Products />
+      
+      <Work />
+      <CaseStudy/>
+      <Donate />
+      <Footer />
     </div>
   );
 }

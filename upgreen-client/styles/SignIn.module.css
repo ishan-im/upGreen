@@ -1,0 +1,17 @@
+.formWrapper{
+    padding: 1rem 2rem;
+}
+
+.buttonWrapper{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+
+.pageWrapper{
+
+    padding: 5rem 18rem;
+}

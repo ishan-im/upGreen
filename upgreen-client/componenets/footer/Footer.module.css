@@ -1,0 +1,15 @@
+.socialWrapper{
+    display: flex;
+    flex-direction: row;
+}
+
+
+.pageWrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 20px;
+}

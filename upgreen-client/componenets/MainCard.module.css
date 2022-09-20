@@ -1,0 +1,19 @@
+.mainCard {
+
+    box-sizing: border-box;
+
+    position: absolute;
+    z-index: 20 ! important;
+    width: 307px;
+    height: 370px;
+    top: 300px;
+    left: 75%;
+    /* bottom: 600px;
+    left: 75%; */
+
+    background: linear-gradient(114.17deg, rgba(238, 206, 125, 0.78) -95.06%, rgba(255, 214, 0, 0.22) -51.79%, rgba(174, 255, 144, 0.792) 98.15%);
+    /* Note: backdrop-filter has minimal browser support */
+    box-shadow: 0px 4px 4px rgba(10, 0, 0, 0.56);
+    border-radius: 15px;
+    padding: 2rem;
+}

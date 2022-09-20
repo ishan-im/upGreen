@@ -1,0 +1,41 @@
+.test {
+    /* text-align: center; */
+    color: rgb(0, 0, 0);
+    text-align: justify;
+    /* font-size: 1.2rem; */
+    /* font-size: 20px; */
+
+}
+
+.mission {
+    text-align: center;
+}
+
+.wrapper {
+    text-align: center;
+}
+
+.point {
+    display: flex;
+}
+
+.point li {
+    flex: 1;
+    /* padding: 0 .5rem; */
+}
+.about_our_product{
+    margin-top: 20%;
+}
+
+/* .btnstyle {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 14px;
+
+    width: 240px;
+    height: 48px;
+
+    background: #C9F2C6;
+    border-radius: 30px;
+} */

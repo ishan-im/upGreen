@@ -1,0 +1,24 @@
+.lineawrapper{
+   
+    padding: 100px 100px 0 100px;
+}
+
+.imageWrapper{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+}
+.imageWrapper div{
+    margin: 50px;
+}
+
+.btnWrapper{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    bottom: 25px;
+
+}

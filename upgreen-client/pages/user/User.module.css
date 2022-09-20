@@ -1,0 +1,30 @@
+.userWrapper{
+    text-align: center;
+}
+
+.userImage{
+    text-align: center;
+}
+
+
+.userDetails{
+    text-align: center;
+}
+
+
+.coinWrapper{
+    position: absolute;
+    top: 80px;
+    right:100px;
+}
+
+.iconWrapper{
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    top: 30px;
+}
+   

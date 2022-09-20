@@ -22,24 +22,25 @@ app.use(express.json());
 
 //cors
 
-app.use(cors({
-
-    origin: process.env.CLIENT_URL
-    
-    }));
+const corsOptions ={
+    origin:'*', 
+    credentials:true,            //access-control-allow-credentials:true
+    optionSuccessStatus:200,
+ }
+ 
+ app.use(cors(corsOptions))
 
 
 // routes middleware
 
 
+const authRoutes = require('./routes/auth');
 
-app.use('/api', ((req, res) => {
 
-    res.json({
-        message: "fuck off"
-    })
 
-}))
+app.use('/api', authRoutes);
+
+
 
 
 //server

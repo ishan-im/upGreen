@@ -1,5 +1,9 @@
 // Import the functions you need from the SDKs you need
 
+
+
+
+
 import { initializeApp } from "firebase/app";
 
 import {
@@ -12,6 +16,9 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
+
+
+import {getStorage} from 'firebase/storage'
 
 import { getFirestore, getDoc, doc, setDoc } from "firebase/firestore";
 import {
@@ -94,12 +101,15 @@ export const createAuthUserWithEmailAndPassword = async (email, password) => {
       auth,
       email,
       password
+      
     );
 
     console.log(userCredential);
 
     return userCredential;
   } catch (error) {
+
+    alert('User already exists:(');
     console.log(error);
   }
 };
@@ -135,6 +145,9 @@ export const userAuthState = async () => {
 // sign out functions
 
 export const logOut = async () => {
+
+  
+
   try {
     const response = await signOut(auth);
 
@@ -146,6 +159,8 @@ export const logOut = async () => {
     alert("Error logging out");
     console.log(error);
   }
+
+ 
 };
 
 //firestore databse
@@ -162,14 +177,17 @@ export const createUserDocument = async (userAuth, additionalData) => {
   // if user does not exists in the database, create a new user
 
   if (!snapShot.exists()) {
-    const { displayName, email } = userAuth;
+    const { displayName, email} = userAuth;
     const createdAt = new Date();
+
+    const coin = 0;
 
     try {
       await setDoc(userRef, {
         displayName,
         email,
         createdAt,
+        coin,
         ...additionalData,
       });
     } catch (error) {
@@ -183,3 +201,50 @@ export const createUserDocument = async (userAuth, additionalData) => {
 
   return userRef;
 };
+
+
+
+export const getUserId = async () => {
+
+  const user = auth.currentUser;
+
+  if (user) {
+    
+        console.log("user id: " + user.uid);
+
+        return user.uid
+  }
+
+  return null;
+}
+
+
+
+export const getIdToken = async () => {
+  
+    const user = auth.currentUser;
+  
+    if (user) {
+      
+          console.log("token: " + user.getIdToken());
+  
+          return user.getIdToken()
+    }
+  
+    return null;
+  }
+
+
+
+// create storage
+
+
+
+
+export const storage = getStorage(fireBaseApp);
+
+
+
+
+
+
